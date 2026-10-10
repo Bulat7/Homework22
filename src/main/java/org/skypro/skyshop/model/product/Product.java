@@ -26,7 +26,6 @@ public abstract class Product implements Searchable {
 
     public abstract boolean isSpecial();
 
-    @JsonIgnore
     @Override
     public String searchTerm() {
         return this.name;

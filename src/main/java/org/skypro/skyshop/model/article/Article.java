@@ -26,7 +26,6 @@ public final class Article implements Searchable {
     public String getName() {
         return name;
     }
-    @JsonIgnore
     @Override
     public String searchTerm() {
         return name + "\n" + article;
@@ -52,5 +51,9 @@ public final class Article implements Searchable {
     @Override
     public UUID getId() {
         return id;
+    }
+
+    public String getArticle() {
+        return article;
     }
 }
