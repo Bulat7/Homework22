@@ -23,19 +23,15 @@ public class BasketService {
     }
 
     public void addProduct(UUID id) {
-        Optional<Product> productOptional = storageService.getProductById(id);
-        if(productOptional.isEmpty()) {
-            throw new IllegalArgumentException();
-        } else {
+        storageService.getProductById(id);
             productBasket.addProduct(id);
-        }
     }
 
     public UserBasket getUserBasket() {
         final Map<UUID, Integer> allProducts = productBasket.getAllProducts();
         List<BasketItem> items = allProducts.entrySet().stream()
                 .map(entry -> new BasketItem(
-                        storageService.getProductById(entry.getKey()).get(),entry.getValue()
+                        storageService.getProductById(entry.getKey()),entry.getValue()
                 ))
                 .toList();
         return new UserBasket(items);
