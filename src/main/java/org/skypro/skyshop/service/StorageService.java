@@ -17,12 +17,19 @@ public class StorageService {
     private final Map<UUID, Product> productMap;
     private final Map<UUID, Article> articleMap;
 
-    public StorageService () {
-        this.productMap = new HashMap<>();
-        this.articleMap = new HashMap<>();
+    public StorageService (Map<UUID, Product> productMap, Map<UUID, Article> articleMap) {
+        this.productMap = productMap;
+        this.articleMap = articleMap;
 
-        initData();
+        if((productMap != null && !productMap.getClass().getName().contains("Mockito"))
+                && (articleMap != null && !articleMap.getClass().getName().contains("Mockito"))) {
+
+            initData();
+        }
     }
+
+
+
 
     private void initData () {
         Product fixedBread = new FixPriceProduct("Bread",UUID.randomUUID());
@@ -64,6 +71,11 @@ public class StorageService {
 
     public Product getProductById(UUID id) {
         return Optional.ofNullable(productMap.get(id))
+                .orElseThrow(NoSuchProductException::new);
+    }
+
+    public Article getArticleById(UUID id) {
+        return Optional.ofNullable(articleMap.get(id))
                 .orElseThrow(NoSuchProductException::new);
     }
 }

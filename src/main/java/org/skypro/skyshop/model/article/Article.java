@@ -40,12 +40,12 @@ public final class Article implements Searchable {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if(!(obj instanceof Article)) return false;
-        return Objects.equals(name, ((Article)obj).name);
+        return Objects.equals(getId(), ((Article)obj).getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hashCode(id);
     }
 
     @Override
