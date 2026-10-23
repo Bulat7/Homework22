@@ -54,7 +54,16 @@ public class SearchServiceTest {
         Assertions.assertEquals(1, searchResults.size());
         SearchResult result = searchResults.iterator().next();
         Assertions.assertEquals(itemName, result.getName());
+    }
 
+    @Test
+    void searchShouldReturnNothing_WhenItemsDontExists() {
+        String expectedItem = "Orange";
+        Searchable searchableItem = Mockito.mock(Searchable.class);
+        Mockito.when(searchableItem.getName()).thenReturn(expectedItem);
+        Mockito.when(storageService.getAllSearcheble()).thenReturn(List.of(searchableItem));
+        Collection <SearchResult> searchResults = searchService.search("Tomato");
+        Assertions.assertEquals(0, searchResults.size());
     }
 
 

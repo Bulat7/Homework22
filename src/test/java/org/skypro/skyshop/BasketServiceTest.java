@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.skypro.skyshop.model.basket.BasketItem;
 import org.skypro.skyshop.model.basket.ProductBasket;
 import org.skypro.skyshop.model.basket.UserBasket;
 import org.skypro.skyshop.model.product.Product;
@@ -14,6 +15,7 @@ import org.skypro.skyshop.service.BasketService;
 import org.skypro.skyshop.service.StorageService;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,8 +35,8 @@ public class BasketServiceTest {
 
     void addProduct_TrowExceptionIfProductDoesntExist() {
         UUID id = UUID.randomUUID();
-        Mockito.doReturn(null).when(storageService).getProductById(id);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> basketService.addProduct(id));
+        Mockito.when(storageService.getProductById(id)).thenThrow(new NoSuchElementException());
+        Assertions.assertThrows(NoSuchElementException.class, () -> basketService.addProduct(id));
     }
 
     @Test
@@ -51,6 +53,7 @@ public class BasketServiceTest {
         Mockito.when(productBasket.getAllProducts()).thenReturn(Map.of());
         UserBasket userBasket = basketService.getUserBasket();
         Assertions.assertTrue(userBasket.getItems().isEmpty());
+        Assertions.assertEquals(0, userBasket.getTotal());
     }
 
     @Test
@@ -59,14 +62,15 @@ public class BasketServiceTest {
         Product product = Mockito.mock(Product.class);
         Mockito.when(productBasket.getAllProducts()).thenReturn(Map.of(uuid, 1));
         Mockito.when(storageService.getProductById(uuid)).thenReturn(product);
+        Mockito.when(product.getPrice()).thenReturn(100);
+
         UserBasket userBasket = basketService.getUserBasket();
         Assertions.assertEquals(1, userBasket.getItems().size());
+        Assertions.assertEquals(100, userBasket.getTotal());
+
+        BasketItem basketItem = userBasket.getItems().get(0);
+        Assertions.assertEquals(product, basketItem.getProduct());
+        Assertions.assertEquals(1, basketItem.getQuantity());
     }
-
-
-
-
-
-
 
 }
