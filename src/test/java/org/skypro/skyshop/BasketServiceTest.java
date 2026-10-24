@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.skypro.skyshop.errors.NoSuchProductException;
 import org.skypro.skyshop.model.basket.BasketItem;
 import org.skypro.skyshop.model.basket.ProductBasket;
 import org.skypro.skyshop.model.basket.UserBasket;
@@ -35,8 +36,8 @@ public class BasketServiceTest {
 
     void addProduct_TrowExceptionIfProductDoesntExist() {
         UUID id = UUID.randomUUID();
-        Mockito.when(storageService.getProductById(id)).thenThrow(new NoSuchElementException());
-        Assertions.assertThrows(NoSuchElementException.class, () -> basketService.addProduct(id));
+        Mockito.when(storageService.getProductById(id)).thenThrow(new NoSuchProductException());
+        Assertions.assertThrows(NoSuchProductException.class, () -> basketService.addProduct(id));
     }
 
     @Test
